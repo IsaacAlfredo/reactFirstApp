@@ -1,9 +1,24 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import { Card } from "../../components/Card";
 
 function Home() {
   const [studentName, setStudentName] = useState();
   const [students, setStudents] = useState([]);
+  const [user, setUser] = useState({ name: "", avatar: "" });
+
+  useEffect(() => {
+    async function fetchData() {
+      const githubUser = await axios.get(
+        "https://api.github.com/users/IsaacAlfredo"
+      );
+      setUser({
+        name: githubUser.data.name,
+        avatar: githubUser.data.avatar_url,
+      });
+    }
+    fetchData();
+  }, []);
 
   function addStudent() {
     const newStudent = {
@@ -22,6 +37,8 @@ function Home() {
     <div className="Home">
       <header>
         <h1>Lista de Presença</h1>
+        <img src={user.avatar} alt="Foto de perfil" />
+        <strong>{user.name}</strong>
       </header>
       <section>
         <input
